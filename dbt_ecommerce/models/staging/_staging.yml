@@ -1,0 +1,107 @@
+version: 2
+
+models:
+  - name: stg_users
+    description: "Utilisateurs/clients de la plateforme, une ligne par utilisateur."
+    columns:
+      - name: user_id
+        description: "Identifiant unique de l'utilisateur."
+        tests:
+          - unique
+          - not_null
+      - name: email
+        description: "Adresse e-mail de l'utilisateur."
+      - name: created_at
+        description: "Date de création du compte utilisateur."
+
+  - name: stg_orders
+    description: "Commandes passées par les utilisateurs, une ligne par commande."
+    columns:
+      - name: order_id
+        description: "Identifiant unique de la commande."
+        tests:
+          - unique
+          - not_null
+      - name: user_id
+        description: "Utilisateur ayant passé la commande."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_users')
+                field: user_id
+      - name: status
+        description: "Statut de la commande (ex: Complete, Cancelled, Processing...)."
+
+  - name: stg_order_items
+    description: "Lignes de détail de chaque commande, une ligne par produit commandé."
+    columns:
+      - name: order_item_id
+        description: "Identifiant unique de la ligne de commande."
+        tests:
+          - unique
+          - not_null
+      - name: order_id
+        description: "Commande associée à cette ligne."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_orders')
+                field: order_id
+      - name: product_id
+        description: "Produit commandé."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_products')
+                field: product_id
+      - name: sale_price
+        description: "Prix de vente réel de l'article."
+
+  - name: stg_products
+    description: "Catalogue des produits vendus, une ligne par produit."
+    columns:
+      - name: product_id
+        description: "Identifiant unique du produit."
+        tests:
+          - unique
+          - not_null
+      - name: product_retail_price
+        description: "Prix de vente conseillé du produit."
+      - name: distribution_center_id
+        description: "Centre de distribution associé au produit."
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_distribution_centers')
+                field: distribution_center_id
+
+  - name: stg_inventory_items
+    description: "Unités de stock rattachées aux produits."
+    columns:
+      - name: inventory_item_id
+        description: "Identifiant unique de l'unité de stock."
+        tests:
+          - unique
+          - not_null
+      - name: product_id
+        description: "Produit associé à cette unité de stock."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_products')
+                field: product_id
+
+  - name: stg_distribution_centers
+    description: "Centres de distribution logistique."
+    columns:
+      - name: distribution_center_id
+        description: "Identifiant unique du centre de distribution."
+        tests:
+          - unique
+          - not_null
+      - name: distribution_center_name
+        description: "Nom du centre de distribution."
