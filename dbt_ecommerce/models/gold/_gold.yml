@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: gld_revenue_by_month
+    description: "Chiffre d'affaires mensuel, nombre de commandes et panier moyen, hors commandes annulées."
+    columns:
+      - name: order_month
+        description: "Mois de la commande (premier jour du mois)."
+        tests:
+          - unique
+          - not_null
+      - name: total_revenue
+        description: "Chiffre d'affaires total du mois."
+      - name: avg_order_value
+        description: "Panier moyen du mois (CA / nombre de commandes)."
+
+  - name: gld_customer_ltv
+    description: "Valeur vie client (Lifetime Value) et segmentation par nombre de commandes."
+    columns:
+      - name: user_id
+        description: "Identifiant unique du client."
+        tests:
+          - unique
+          - not_null
+      - name: lifetime_value
+        description: "Montant total dépensé par le client, hors commandes annulées."
+      - name: customer_segment
+        description: "Segment du client basé sur le nombre de commandes passées."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Aucune commande', 'Nouveau client', 'Client récurrent', 'Client VIP']
+
+  - name: gld_inventory_status
+    description: "État du stock par produit : unités vendues, en stock, et valeur du stock restant."
+    columns:
+      - name: product_id
+        description: "Identifiant unique du produit."
+        tests:
+          - unique
+          - not_null
+      - name: units_in_stock
+        description: "Nombre d'unités actuellement en stock (non vendues)."
+      - name: stock_value
+        description: "Valeur totale du stock restant, au prix de vente conseillé."
