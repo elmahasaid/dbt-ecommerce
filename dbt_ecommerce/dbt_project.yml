@@ -1,16 +1,15 @@
-
-# Name your project! Project names should contain only lowercase characters
-# and underscores. A good package name should reflect your organization's
-# name or the intended use of these models
+# Nomme ton projet ! Les noms de projet doivent contenir uniquement des
+# caractères minuscules et des underscores. Un bon nom de package reflète
+# le nom de ton organisation ou l'usage prévu de ces modèles.
 name: 'dbt_ecommerce'
 version: '1.0.0'
 
-# This setting configures which "profile" dbt uses for this project.
+# Ce paramètre indique quel "profil" dbt utilise pour ce projet.
 profile: 'dbt_ecommerce'
 
-# These configurations specify where dbt should look for different types of files.
-# The `model-paths` config, for example, states that models in this project can be
-# found in the "models/" directory. You probably won't need to change these!
+# Ces configurations précisent où dbt doit chercher les différents types de fichiers.
+# Par exemple, `model-paths` indique que les modèles de ce projet se trouvent
+# dans le dossier "models/". Tu n'auras probablement pas besoin de changer ça !
 model-paths: ["models"]
 analysis-paths: ["analyses"]
 test-paths: ["tests"]
@@ -18,19 +17,19 @@ seed-paths: ["seeds"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
 
-clean-targets:         # directories to be removed by `dbt clean`
+clean-targets:         # dossiers supprimés par la commande `dbt clean`
   - "target"
   - "dbt_packages"
 
 
-# Configuring models
-# Full documentation: https://docs.getdbt.com/docs/configuring-models
+# Configuration des modèles
+# Documentation complète : https://docs.getdbt.com/docs/configuring-models
 
-# In this example config, we tell dbt to build all models in the example/
-# directory as views. These settings can be overridden in the individual model
-# files using the `{{ config(...) }}` macro.
+# Ici, on indique à dbt de matérialiser tous les modèles présents dans le
+# dossier models/staging/ sous forme de vues (views). Ce paramètre peut être
+# surchargé au cas par cas dans chaque fichier de modèle via la macro
+# `{{ config(...) }}`.
 models:
   dbt_ecommerce:
-    # Config indicated by + and applies to all files under models/example/
-    example:
+    staging:
       +materialized: view

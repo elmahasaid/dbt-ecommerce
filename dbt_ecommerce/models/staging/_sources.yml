@@ -1,0 +1,20 @@
+version: 2
+
+sources:
+  - name: thelook_ecommerce
+    database: project-576798cc-cf7b-4e2b-8fe
+    schema: raw_ecommerce
+    description: "Copie locale du dataset public e-commerce (The Look), utilisée comme source pour les modèles dbt."
+    tables:
+      - name: orders
+        description: "Commandes passées par les utilisateurs."
+      - name: order_items
+        description: "Lignes de détail de chaque commande (produit, statut, prix de vente)."
+      - name: products
+        description: "Catalogue des produits vendus."
+      - name: users
+        description: "Utilisateurs/clients de la plateforme."
+      - name: inventory_items
+        description: "Unités de stock rattachées aux produits."
+      - name: distribution_centers
+        description: "Centres de distribution logistique."
