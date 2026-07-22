@@ -33,3 +33,5 @@ models:
   dbt_ecommerce:
     staging:
       +materialized: view
+    silver:
+      +materialized: table

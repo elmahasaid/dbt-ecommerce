@@ -1,0 +1,40 @@
+version: 2
+
+models:
+  - name: slv_orders_enriched
+    description: "Table pivot au niveau ligne de commande : combine order_items, orders et products pour donner une vue enrichie de chaque article commandé (statut, produit, marge brute)."
+    columns:
+      - name: order_item_id
+        description: "Identifiant unique de la ligne de commande."
+        tests:
+          - unique
+          - not_null
+      - name: order_id
+        description: "Commande associée."
+        tests:
+          - not_null
+      - name: user_id
+        description: "Client ayant passé la commande."
+        tests:
+          - not_null
+      - name: order_status
+        description: "Statut de la commande au moment de l'extraction."
+      - name: product_category
+        description: "Catégorie du produit commandé."
+      - name: gross_margin
+        description: "Marge brute réalisée sur cet article (prix de vente - coût produit)."
+
+  - name: slv_customers
+    description: "Une ligne par client, enrichie des statistiques de commandes (nombre total, dates, quantités)."
+    columns:
+      - name: user_id
+        description: "Identifiant unique du client."
+        tests:
+          - unique
+          - not_null
+      - name: total_orders
+        description: "Nombre total de commandes distinctes passées par ce client."
+      - name: first_order_at
+        description: "Date de la première commande du client."
+      - name: last_order_at
+        description: "Date de la dernière commande du client."
