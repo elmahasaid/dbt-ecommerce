@@ -1,0 +1,57 @@
+name: dbt CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  dbt-build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+
+    defaults:
+      run:
+        working-directory: dbt_ecommerce
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Authentification Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          project_id: project-576798cc-cf7b-4e2b-8fe
+          workload_identity_provider: projects/99058265906/locations/global/workloadIdentityPools/github-pool/providers/github-provider
+          service_account: dbt-service-account@project-576798cc-cf7b-4e2b-8fe.iam.gserviceaccount.com
+
+      - name: Installation Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Installation de dbt
+        run: pip install dbt-bigquery
+
+      - name: Création du profiles.yml
+        run: |
+          mkdir -p ~/.dbt
+          cat > ~/.dbt/profiles.yml << EOF
+          dbt_ecommerce:
+            target: ci
+            outputs:
+              ci:
+                type: bigquery
+                method: oauth
+                project: project-576798cc-cf7b-4e2b-8fe
+                dataset: dbt_ecommerce
+                threads: 4
+                location: US
+          EOF
+
+      - name: dbt build (run + test)
+        run: dbt build
